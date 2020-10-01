@@ -1,0 +1,31 @@
+<html>
+<head>
+<meta charset="UTF-8">
+<script src="term.js"></script>
+</head>
+
+<body onload="showTerm()">
+
+<div id=terminal tabindex=0></div>
+
+<script>
+const ws = new WebSocket('ws://localhost:8888')
+ws.onopen = function(e) {
+  term.write("WS Connection established\r\n");
+};
+ws.onmessage = function(event) {
+  term.write(event.data);
+};
+var term = new Term('#terminal', 80, 15, function (letter) {
+  if (!!letter && letter.length === 1) {
+    ws.send(letter);
+  }
+});
+
+function showTerm() {
+  term.open();
+}
+</script>
+
+</body>
+</html>
